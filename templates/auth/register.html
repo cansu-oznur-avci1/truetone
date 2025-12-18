@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Register | TrueTone{% endblock %}
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 450px;">
+    <div class="card-body p-4 p-md-5">
+
+      <div class="text-center mb-4">
+        <h3 class="fw-bold">Create Account</h3>
+        <p class="text-muted small mb-0">
+          Sign up to start giving feedback
+        </p>
+      </div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Username</label>
+          <input type="text" name="username"
+                 class="form-control form-control-lg"
+                 placeholder="username" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email</label>
+          <input type="email" name="email"
+                 class="form-control form-control-lg"
+                 placeholder="email@example.com" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Password</label>
+          <input type="password" name="password"
+                 class="form-control form-control-lg"
+                 placeholder="••••••••" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Confirm Password</label>
+          <input type="password" name="password2"
+                 class="form-control form-control-lg"
+                 placeholder="••••••••" required>
+        </div>
+
+        {% if error %}
+          <div class="alert alert-danger py-2 small text-center">
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <div class="d-grid mt-4">
+          <button type="submit" class="btn btn-success btn-lg rounded-pill">
+            Register
+          </button>
+        </div>
+      </form>
+
+      <div class="text-center mt-4">
+        <span class="text-muted small">Do you already have an account?</span>
+        <a href="{% url 'login' %}" class="small fw-semibold text-decoration-none">
+          Login
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
