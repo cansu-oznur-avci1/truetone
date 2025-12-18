@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.shortcuts import render
 
 def home(request):
@@ -13,6 +13,8 @@ def register_view(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('accounts/', include('accounts.urls')),
+    path('feedback/', include('feedback.urls')),
     path("", home, name="home"),
     path("login/", login_view, name="login"),
     path("register/", register_view, name="register"),
