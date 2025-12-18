@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings # User modeli için gerekli
+from django.core.exceptions import ValidationError
+import re # Düzenli ifadeler için
 
 class Feedback(models.Model):
     # FR-9: Yapılandırılmış alanlar için seçenekler
@@ -73,16 +75,36 @@ class Feedback(models.Model):
     def __str__(self):
         return f"Feedback {self.id} - {self.service.name}"
 
+    def clean(self):
+        # FR-31 & FR-64: Karakter sınırı kontrolü (500 karakter) 
+        if len(self.raw_text) > 500:
+            raise ValidationError("Şikayet metni 500 karakterden fazla olamaz.")
+    
+        # FR-12 & FR-65: Boş girişleri engelle [cite: 34, 65]
+        if not self.raw_text.strip():
+            raise ValidationError("Şikayet alanı boş bırakılamaz.")
+
     # Normalleştirme Mekanizması [cite: 37, 38]
     def save(self, *args, **kwargs):
+        # FR-14: Normalleştirme süreci sadece kısa açıklama alanına uygulanır [cite: 68]
         if not self.normalized_text:
-            aggressive_words = {
-                "berbat": "beklentimin altında",
-                "yavaş": "hızlandırılması gereken",
-                "kötü": "iyileştirilmesi gereken",
+            text = self.raw_text.lower()
+
+            # FR-35 & FR-66: Özel karakterleri ( < , > ) temizleyerek güvenliği sağla [cite: 35, 66]
+            text = re.sub(r'<[^>]*?>', '', text) 
+            # FR-15 & FR-69: Agresif veya duygusal ifadeleri tespit et [cite: 38, 69]
+            rules = {
+                r"(berbat|rezalet|iğrenç)": "beklentilerimi karşılamadı",
+                r"(yavaş|kaplumbağa|bekledik)": "hızlandırılması gereken bir süreç",
+                r"(kötü|çirkin)": "iyileştirilmeye açık",
+                r"(ne biçim|saçma sapan|saçma)": "daha profesyonel olabilecek"
             }
-            temp_text = self.raw_text.lower()
-            for word, polite_word in aggressive_words.items():
-                temp_text = temp_text.replace(word, polite_word)
-            self.normalized_text = temp_text.capitalize()
+
+            for pattern, replacement in rules.items():
+                text = re.sub(pattern, replacement, text)
+
+            # FR-70: Nazik ve nötr versiyonu oluştur [cite: 70]
+            self.normalized_text = text.capitalize() 
+        
+        # FR-17 & FR-71: Hem ham hem de normalize metni veritabanına kaydet [cite: 39, 71]
         super().save(*args, **kwargs)
