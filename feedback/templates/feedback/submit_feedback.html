@@ -1,8 +1,95 @@
 {% extends "base.html" %}
+{% block title %}Submit Official Feedback | TrueTone{% endblock %}
+
 {% block content %}
-<h2>Yeni Geri Bildirim Oluştur</h2>
-<form method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Normalleştir ve Gönder</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="alert alert-secondary border-0 shadow-sm rounded-4 mb-4 p-3">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <span class="fs-3">🏢</span>
+                </div>
+                <div class="ms-3">
+                    <h6 class="mb-0 fw-bold">Department: {{ service.name }}</h6>
+                    <small class="text-muted">Your feedback will be delivered to the relevant <strong>Service Owner</strong> after being processed.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <h3 class="fw-bold mb-4">Official Feedback Form</h3>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="bg-light p-4 rounded-4 mb-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">1. Complaint Category</label>
+                            <p class="small text-muted">What is the main subject of your concern?</p>
+                            {{ form.category }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">2. Severity</label>
+                                {{ form.severity }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">3. Communication Tone</label>
+                                {{ form.tone }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">4. Detailed Explanation (Optional)</label>
+                        <p class="small text-muted">Briefly describe the issue. Our <strong>TrueTone Normalizer</strong> will transform your text into a professional format for the Service Owner.</p>
+                        
+                        {{ form.raw_text }}
+                        
+                        <div class="d-flex justify-content-between mt-2">
+                            <span class="badge bg-info-subtle text-info rounded-pill px-3">
+                                <i class="bi bi-magic"></i> AI Normalization Enabled
+                            </span>
+                            <small id="charCount" class="text-muted">Max 150 characters</small>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow">
+                            Submit to Department Manager
+                        </button>
+                        <a href="{% url 'services:service_list' %}" class="btn btn-link text-decoration-none text-muted small">
+                            Cancel and Return to Services
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    select, textarea, input {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    textarea { min-height: 100px; }
+    select:focus, textarea:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+</style>
 {% endblock %}
