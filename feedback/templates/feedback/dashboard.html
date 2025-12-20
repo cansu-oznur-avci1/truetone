@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Hizmet Sahibi Paneli</h2>
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body">
+            <h5 class="card-title mb-4">Size Gelen Geri Bildirimler</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Servis</th>
+                            <th>Kategori</th>
+                            <th>Şikayet (Normalleştirilmiş)</th>
+                            <th>Tarih</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fb in feedbacks %}
+                        <tr>
+                            <td>{{ fb.service.name }}</td>
+                            <td>{{ fb.category }}</td>
+                            <td>{{ fb.normalized_text }}</td>
+                            <td>{{ fb.date|date:"d/m/Y H:i" }}</td> 
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Henüz bir geri bildirim bulunmuyor.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

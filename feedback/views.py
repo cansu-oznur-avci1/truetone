@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import FeedbackForm
+from .models import Feedback
 
 @login_required # FR-19 & FR-89: Sadece giriş yapanlar feedback verebilir
 def submit_feedback(request):
@@ -16,3 +17,11 @@ def submit_feedback(request):
     
     return render(request, 'feedback/submit_feedback.html', {'form': form})
 
+@login_required
+def service_owner_dashboard(request):
+    # Sadece giriş yapan kullanıcının (request.user) sahibi olduğu servislerin feedbacklerini getirir.
+    feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
+    
+    return render(request, 'feedback/dashboard.html', {
+        'feedbacks': feedbacks
+    })
