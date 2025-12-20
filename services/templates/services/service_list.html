@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Services | TrueTone{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Available Services</h2>
+        <p class="text-muted">Select a service to provide structured feedback[cite: 55, 57].</p>
+    </div>
+
+    <div class="row g-4">
+        {% for service in services %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 rounded-4 transition-hover">
+                <div class="card-body p-4">
+                    <div class="badge bg-primary mb-2">{{ service.category }}</div> <h5 class="card-title fw-bold">{{ service.name }}</h5> <p class="card-text text-muted small">{{ service.short_description }}</p> </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="{% url 'feedback:submit_feedback' service.id %}" class="btn btn-outline-primary w-100 rounded-pill">
+                        Give Feedback
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No services available at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .transition-hover { transition: transform 0.2s ease, shadow 0.2s ease; }
+    .transition-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+</style>
+{% endblock %}
