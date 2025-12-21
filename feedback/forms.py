@@ -6,7 +6,17 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback
         
         fields = ['category', 'severity', 'tone', 'intent', 'raw_text'] 
-        
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'severity': forms.Select(attrs={'class': 'form-select'}),
+            'tone': forms.Select(attrs={'class': 'form-select'}),
+            'intent': forms.Select(attrs={'class': 'form-select'}),
+            'raw_text': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Type your feedback here...',
+                'rows': 4
+            }),
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
