@@ -7,4 +7,5 @@ app_name = 'feedback'
 urlpatterns = [
     path('submit/<int:service_id>/', submit_feedback, name='submit_feedback'),
     path('dashboard/', views.service_owner_dashboard, name='service_owner_dashboard'),
+    path('my-feedbacks/', views.user_feedback_list, name='user_feedback_list'),
 ]

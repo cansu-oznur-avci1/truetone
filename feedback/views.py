@@ -33,3 +33,8 @@ def service_owner_dashboard(request):
     return render(request, 'feedback/dashboard.html', {
         'feedbacks': feedbacks
     })
+@login_required
+def user_feedback_list(request):
+    # Template içindeki döngü 'feedbacks' beklediği için anahtarı öyle veriyoruz
+    user_feedbacks = Feedback.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'feedback/user_feedback_list.html', {'feedbacks': user_feedbacks})
