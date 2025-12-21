@@ -27,9 +27,14 @@ def submit_feedback(request, service_id):
 
 @login_required
 def service_owner_dashboard(request):
-  
-    feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
-    
-    return render(request, 'feedback/dashboard.html', {
-        'feedbacks': feedbacks
-    })
+    if request.user.is_superuser:
+        # Admin her şeyi görür
+        feedbacks = Feedback.objects.all().order_by('-date')
+    elif request.user.managed_services.exists():
+        # Sorumlu sadece kendi hizmetini görür
+        feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
+    else:
+        # Yetkisi yoksa ana sayfaya at
+        return redirect('home')
+        
+    return render(request, 'feedback/dashboard.html', {'feedbacks': feedbacks})

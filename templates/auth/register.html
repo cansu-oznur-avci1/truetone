@@ -12,8 +12,26 @@
           Sign up to start giving feedback
         </p>
       </div>
-
-      <form method="post" novalidate>
+      {% if form.errors %}
+        <div class="alert alert-danger shadow-sm border-0 rounded-4">
+          <ul class="mb-0">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <form method="post" action="{% url 'register' %}" novalidate>
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            {{ form.errors }}
+          </div>
+        {% endif %}
         {% csrf_token %}
 
         <div class="mb-3">
@@ -32,7 +50,7 @@
 
         <div class="mb-3">
           <label class="form-label fw-semibold">Password</label>
-          <input type="password" name="password"
+          <input type="password" name="password1"
                  class="form-control form-control-lg"
                  placeholder="••••••••" required>
         </div>

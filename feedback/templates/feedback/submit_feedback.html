@@ -23,6 +23,12 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
 
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
                     <div class="bg-light p-4 rounded-4 mb-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">1. Complaint Category</label>
@@ -45,7 +51,10 @@
                     <div class="mb-4">
                         <label class="form-label fw-bold">4. Detailed Explanation (Optional)</label>
                         <p class="small text-muted">Briefly describe the issue. Our <strong>TrueTone Normalizer</strong> will transform your text into a professional format for the Service Owner.</p>
-                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Intent (Tone Analysis)</label>
+                            {{ form.intent }}
+                        </div>
                         {{ form.raw_text }}
                         
                         <div class="d-flex justify-content-between mt-2">
@@ -60,7 +69,7 @@
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow">
                             Submit to Department Manager
                         </button>
-                        <a href="{% url 'services:service_list' %}" class="btn btn-link text-decoration-none text-muted small">
+                        <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-muted small">
                             Cancel and Return to Services
                         </a>
                     </div>
