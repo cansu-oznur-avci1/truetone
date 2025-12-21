@@ -3,9 +3,9 @@
     "model": "services.service",
     "pk": 4,
     "fields": {
-      "name": "Yemekhane",
+      "name": "Cafeteria",
       "category": "food",
-      "description": "��le yeme�i hizmeti",
+      "description": "Lunch and catering services for students and staff.",
       "owner": 5
     }
   },
@@ -13,9 +13,9 @@
     "model": "services.service",
     "pk": 5,
     "fields": {
-      "name": "K�t�phane",
+      "name": "Library",
       "category": "education",
-      "description": "7/24 a��k k�t�phane \r\nkitap �d�n� alma ve verme i�lemleri\r\ntoplant� odalar� rezervasyonu\r\n�al��ma alanlar�",
+      "description": "24/7 open library services, book lending, study room reservations, and quiet zones.",
       "owner": 6
     }
   },
@@ -23,9 +23,9 @@
     "model": "services.service",
     "pk": 6,
     "fields": {
-      "name": "Bilgi ��lem Destek",
+      "name": "IT Support",
       "category": "it",
-      "description": "Ak�ll� Tahtalar\r\nSoliClub uygulamas�\r\nKarta para y�kleme i�lemi",
+      "description": "Technical support for Smart Boards, SoliClub app, and campus card payment systems.",
       "owner": 7
     }
   }
