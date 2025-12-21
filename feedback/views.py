@@ -27,9 +27,33 @@ def submit_feedback(request, service_id):
 
 @login_required
 def service_owner_dashboard(request):
-  
-    feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
+    # Eğer Admin ise tüm geri bildirimleri görsün
+    if request.user.is_superuser:
+        feedbacks = Feedback.objects.all().order_by('-date')
+    # Eğer Hizmet Sorumlusu ise sadece kendi hizmetininkileri görsün
+    elif request.user.managed_services.exists():
+        feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
+    # Hiçbiri değilse (Normal User) erişimi engelle
+    else:
+        return redirect('home')
     
     return render(request, 'feedback/dashboard.html', {
         'feedbacks': feedbacks
+    })
+
+@login_required
+def user_feedback_list(request):
+    # Kullanıcının kendi feedback'lerini çekiyoruz
+    user_feedbacks = Feedback.objects.filter(user=request.user).order_by('-date')
+    
+    # Sayıları hesaplıyoruz
+    total_sent = user_feedbacks.count()
+    # Şimdilik 'processed' kısmını 0 bırakabiliriz veya 
+    # AI analizi bittiğinde 'sentiment' alanı dolu olanları sayabiliriz.
+    processed_count = user_feedbacks.exclude(tone__isnull=True).count() 
+
+    return render(request, 'feedback/user_feedback_list.html', {
+        'feedbacks': user_feedbacks,
+        'total_sent': total_sent,
+        'processed_count': processed_count,
     })
