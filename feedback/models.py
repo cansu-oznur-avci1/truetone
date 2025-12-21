@@ -6,33 +6,32 @@ import re # Düzenli ifadeler için
 class Feedback(models.Model):
     # FR-9: Yapılandırılmış alanlar için seçenekler
     CATEGORY_CHOICES = [
-        ('technical', 'Teknik'),
-        ('service', 'Hizmet'),
-        ('staff', 'Personel'),
-        ('other', 'Diğer'),
+        ('technical', 'Technical'),
+        ('service', 'Service'),
+        ('staff', 'Staff'),
+        ('other', 'Other'),
     ]
     
     SEVERITY_CHOICES = [
-        (1, 'Düşük'),
-        (2, 'Orta'),
-        (3, 'Yüksek'),
-        (4, 'Kritik'),
+        (1, 'Low'),
+        (2, 'Medium'),
+        (3, 'High'),
+        (4, 'Critical'),
     ]
 
     # FR-9 & FR-61: Ton seçenekleri
     TONE_CHOICES = [
-        ('aggressive', 'Agresif'),
-        ('neutral', 'Nötr'),
-        ('polite', 'Nazik'),
-        ('disappointed', 'Hayal Kırıklığına Uğramış'),
+        ('aggressive', 'Aggressive'),
+        ('neutral', 'Neutral'),
+        ('polite', 'Polite'),
+        ('disappointed', 'Disappointed'),
     ]
-
     # FR-9 & FR-62: Niyet seçenekleri
     INTENT_CHOICES = [
-        ('complaint', 'Şikayet'),
-        ('suggestion', 'Öneri'),
-        ('praise', 'Övgü'),
-        ('question', 'Soru'),
+        ('complaint', 'Complaint'),
+        ('suggestion', 'Suggestion'),
+        ('praise', 'Praise'),
+        ('question', 'Question'),
     ]
 
     # HATA 1 (User): settings.AUTH_USER_MODEL kullanarak çözüyoruz [cite: 16]
@@ -51,8 +50,8 @@ class Feedback(models.Model):
     )
 
     # Metin Alanları [cite: 30, 31, 39]
-    raw_text = models.TextField(max_length=500, help_text="Orijinal şikayet metni") 
-    normalized_text = models.TextField(blank=True, null=True, help_text="Düzenlenmiş metin")
+    raw_text = models.TextField(max_length=500, help_text="Original feedback text") 
+    normalized_text = models.TextField(blank=True, null=True, help_text="Normalized text")
 
     # Yapılandırılmış Veriler [cite: 29]
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
@@ -61,13 +60,13 @@ class Feedback(models.Model):
         max_length=20, 
         choices=TONE_CHOICES, 
         default='neutral',
-        help_text="Kullanıcının algılanan tonu"
+        help_text="Detected user tone"
     )
     intent = models.CharField(
         max_length=20, 
         choices=INTENT_CHOICES, 
         default='complaint',
-        help_text="Kullanıcının amacı"
+        help_text="Detected user intent"
     )
     
     date = models.DateTimeField(auto_now_add=True)
@@ -78,11 +77,11 @@ class Feedback(models.Model):
     def clean(self):
         # FR-31 & FR-64: Karakter sınırı kontrolü (500 karakter) 
         if len(self.raw_text) > 500:
-            raise ValidationError("Şikayet metni 500 karakterden fazla olamaz.")
+            raise ValidationError("Feedback text cannot exceed 500 characters.")
     
         # FR-12 & FR-65: Boş girişleri engelle [cite: 34, 65]
         if not self.raw_text.strip():
-            raise ValidationError("Şikayet alanı boş bırakılamaz.")
+            raise ValidationError("Feedback field cannot be empty.")
 
     # Normalleştirme Mekanizması [cite: 37, 38]
     def save(self, *args, **kwargs):
@@ -94,12 +93,11 @@ class Feedback(models.Model):
             text = re.sub(r'<[^>]*?>', '', text) 
             # FR-15 & FR-69: Agresif veya duygusal ifadeleri tespit et [cite: 38, 69]
             rules = {
-                r"(berbat|rezalet|iğrenç)": "beklentilerimi karşılamadı",
-                r"(yavaş|kaplumbağa|bekledik)": "hızlandırılması gereken bir süreç",
-                r"(kötü|çirkin)": "iyileştirilmeye açık",
-                r"(ne biçim|saçma sapan|saçma)": "daha profesyonel olabilecek"
-            }
-
+                r"(terrible|awful|disgusting)": "did not meet expectations",
+                r"(slow|late|waited)": "process needs acceleration",
+                r"(bad|ugly)": "open to improvement",
+                r"(stupid|nonsense)": "could be more professional"
+            }   
             for pattern, replacement in rules.items():
                 text = re.sub(pattern, replacement, text)
 
