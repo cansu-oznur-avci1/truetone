@@ -1,37 +1,156 @@
 {% extends "base.html" %}
+
+{% block title %}Service Management Intelligence{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Hizmet Sahibi Paneli</h2>
-    <div class="card shadow-sm border-0 rounded-3">
-        <div class="card-body">
-            <h5 class="card-title mb-4">Size Gelen Geri Bildirimler</h5>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Servis</th>
-                            <th>Kategori</th>
-                            <th>Şikayet (Normalleştirilmiş)</th>
-                            <th>Tarih</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for fb in feedbacks %}
-                        <tr>
-                            <td>{{ fb.service.name }}</td>
-                            <td>{{ fb.category }}</td>
-                            <td>{{ fb.normalized_text }}</td>
-                            <td>{{ fb.date|date:"d/m/Y H:i" }}</td> 
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">Henüz bir geri bildirim bulunmuyor.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<div class="container py-5">
+    <div class="row mb-5 animate__animated animate__fadeIn">
+        <div class="col-lg-12">
+            <div class="main-banner p-5 rounded-5 border-0 shadow-lg text-white position-relative overflow-hidden">
+                <div class="position-relative z-index-2">
+                    <h1 class="display-5 fw-bold mb-2">Service Owner Dashboard</h1>
+                    <p class="lead opacity-75">Live monitoring & AI-optimized feedback analytics.</p>
+                </div>
+                <div class="banner-circle"></div>
             </div>
         </div>
     </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white transition-all p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted small fw-bold text-uppercase mb-2">Total Feedbacks</h6>
+                        <h2 class="fw-black text-dark mb-0">{{ feedbacks|length }}</h2>
+                    </div>
+                    <div class="icon-wrap bg-primary-subtle text-primary">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white transition-all p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted small fw-bold text-uppercase mb-2">AI Normalization</h6>
+                        <h2 class="fw-black text-success mb-0 pulse-text">ACTIVE</h2>
+                    </div>
+                    <div class="icon-wrap bg-success-subtle text-success">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white transition-all p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted small fw-bold text-uppercase mb-2">Data Privacy</h6>
+                        <h2 class="fw-black text-info mb-0 text-uppercase small-caps">Enabled</h2>
+                    </div>
+                    <div class="icon-wrap bg-info-subtle text-info">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-5 overflow-hidden animate__animated animate__slideInUp">
+        <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center border-0">
+            <h4 class="mb-0 fw-bold text-dark"><i class="fas fa-stream me-2 text-primary"></i>Recent Submissions</h4>
+            <span class="badge bg-soft-primary text-primary rounded-pill px-3 py-2">
+                <i class="fas fa-sync fa-spin me-2"></i>Live Data
+            </span>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle mb-0">
+                <thead>
+                    <tr class="bg-light-subtle border-bottom">
+                        <th class="ps-5 py-4 text-muted small fw-bold text-uppercase">Service</th>
+                        <th class="py-4 text-muted small fw-bold text-uppercase text-center">Severity</th>
+                        <th class="py-4 text-muted small fw-bold text-uppercase" style="width: 45%;">AI Optimized Content (Normalized)</th>
+                        <th class="pe-5 py-4 text-muted small fw-bold text-uppercase text-end">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fb in feedbacks %}
+                    <tr class="hover-row-glow transition-all">
+                        <td class="ps-5">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-icon bg-dark text-white rounded-3 me-3">
+                                    {{ fb.service.name|slice:":1" }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ fb.service.name }}</div>
+                                    <small class="text-primary fw-bold" style="font-size: 0.65rem;">{{ fb.category|upper }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge rounded-pill px-3 py-2 {% if fb.severity >= 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                Level {{ fb.severity }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="p-3 rounded-4 bg-light border-0 ai-bubble transition-all shadow-sm">
+                                <p class="mb-0 text-secondary small italic">
+                                    <i class="fas fa-magic me-2 text-primary opacity-50"></i>
+                                    {{ fb.normalized_text|default:"Our AI is analyzing the tone..." }}
+                                </p>
+                            </div>
+                        </td>
+                        <td class="pe-5 text-end">
+                            <div class="fw-bold text-dark small">{{ fb.date|date:"M d, Y" }}</div>
+                            <div class="text-muted" style="font-size: 0.7rem;">{{ fb.date|date:"H:i A" }}</div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <div class="opacity-25 mb-3"><i class="fas fa-folder-open fa-4x"></i></div>
+                            <p class="text-muted fw-bold">No feedback entries found for your services.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    
+    body { background-color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    .main-banner { background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%); }
+    .banner-circle { position: absolute; top: -50px; right: -50px; width: 250px; height: 250px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+
+    /* Premium Stats Cards */
+    .stat-card-premium { border: 1px solid #e5e7eb; }
+    .stat-card-premium:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important; border-color: #3b82f6; }
+    
+    .icon-wrap { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 15px; font-size: 1.25rem; }
+
+    /* Glowing Table Rows */
+    .hover-row-glow:hover { background-color: #ffffff !important; transform: scale(1.005); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .hover-row-glow:hover .ai-bubble { background-color: #ffffff !important; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important; transform: translateX(5px); }
+
+    .avatar-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    
+    .pulse-text { animation: pulse-opacity 2s infinite; }
+    @keyframes pulse-opacity { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+    .fw-black { font-weight: 800; }
+    .italic { font-style: italic; }
+    .bg-soft-primary { background-color: #e0e7ff; }
+</style>
 {% endblock %}
