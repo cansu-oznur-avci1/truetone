@@ -9,9 +9,9 @@ def home(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls), 
+    path('accounts/register/', include('accounts.urls')), 
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),    
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    #path('accounts/', include('accounts.urls')), 
     path('feedback/', include('feedback.urls', namespace='feedback')),  
     path('services/', include('services.urls')),  
     path("", views.service_list, name="home"),
