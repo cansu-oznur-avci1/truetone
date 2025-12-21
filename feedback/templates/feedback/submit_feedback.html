@@ -29,45 +29,22 @@
                         </div>
                     {% endif %}
 
-                    <div class="bg-light p-4 rounded-4 mb-4">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">1. Complaint Category</label>
-                            <p class="small text-muted">What is the main subject of your concern?</p>
-                            {{ form.category }}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">2. Severity</label>
-                                {{ form.severity }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">3. Communication Tone</label>
-                                {{ form.tone }}
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="mb-4">
-                        <label class="form-label fw-bold">4. Detailed Explanation (Optional)</label>
-                        <p class="small text-muted">Briefly describe the issue. Our <strong>TrueTone Normalizer</strong> will transform your text into a professional format for the Service Owner.</p>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Intent (Tone Analysis)</label>
-                            {{ form.intent }}
-                        </div>
+                        <label class="form-label fw-bold">Feedback Details</label>
+                        <p class="small text-muted">Briefly describe the issue. Our <strong>TrueTone AI</strong> will automatically analyze the category, tone, and severity for the Service Owner.</p>
+        
                         {{ form.raw_text }}
-                        
+        
                         <div class="d-flex justify-content-between mt-2">
                             <span class="badge bg-info-subtle text-info rounded-pill px-3">
-                                <i class="bi bi-magic"></i> AI Normalization Enabled
+                                <i class="bi bi-magic"></i> AI Analysis & Normalization Enabled
                             </span>
-                            <small id="charCount" class="text-muted">Max 150 characters</small>
+                            <small id="charCount" class="text-muted">Max 500 characters</small>
                         </div>
                     </div>
-
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow">
-                            Submit to Department Manager
+                            Submit Feedback
                         </button>
                         <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-muted small">
                             Cancel and Return to Services
