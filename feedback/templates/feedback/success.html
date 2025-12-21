@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container text-center py-5">
+    <h2>Thank you!</h2>
+    <p>Your feedback for <strong>{{ feedback.service.name }}</strong> has been recorded.</p>
+    <a href="{% url 'home' %}" class="btn btn-outline-primary">Back to Services</a>
+</div>
+{% endblock %}
