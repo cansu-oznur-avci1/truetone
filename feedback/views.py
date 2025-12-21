@@ -19,17 +19,23 @@ def submit_feedback(request, service_id):
     else:
         form = FeedbackForm()
     
-   
     return render(request, 'feedback/submit_feedback.html', {
         'form': form,
         'service': service
     })
 
+# --- EKSİK OLAN FONKSİYON BURASI (Hata veren kısım) ---
+@login_required
+def user_feedback_list(request):
+    """Kullanıcının kendi gönderdiği feedback'leri listeler (Dashboard User)"""
+    feedbacks = Feedback.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'feedback/user_feedback_list.html', {'feedbacks': feedbacks})
+
+# --- BUGÜNKÜ GÖREVİMİZ (Service Owner Dashboard) ---
 @login_required
 def service_owner_dashboard(request):
-  
+    """Servis sahibine gelen feedback'leri listeler (Normalized text ile)"""
     feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
-    
     return render(request, 'feedback/dashboard.html', {
         'feedbacks': feedbacks
     })
