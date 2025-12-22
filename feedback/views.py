@@ -24,36 +24,52 @@ def submit_feedback(request, service_id):
         'service': service
     })
 
-# --- USER DASHBOARD (Aleyna's Stats Included) ---
+# --- USER DASHBOARD (Updated with Week 2 Filters) ---
 @login_required
 def user_feedback_list(request):
-    """Kullanıcının kendi gönderdiği feedback'leri istatistiklerle listeler"""
-    user_feedbacks = Feedback.objects.filter(user=request.user).order_by('-date')
+    """Kullanıcının kendi feedback'lerini filtreleme ve istatistiklerle listeler"""
     
-    # Aleyna'nın eklediği sayaçlar
-    total_sent = user_feedbacks.count()
-    processed_count = user_feedbacks.exclude(tone__isnull=True).count() 
+    # 1. Temel Sorgu: Kullanıcının kendi verileri
+    query_set = Feedback.objects.filter(user=request.user).order_by('-date')
+
+    # 2. Hafta 1. Gün: Filtreleme Mantığı
+    search_query = request.GET.get('q')
+    status_filter = request.GET.get('status')
+    severity_filter = request.GET.get('severity')
+
+    if search_query:
+        query_set = query_set.filter(raw_text__icontains=search_query)
+
+    if status_filter == 'processed':
+        query_set = query_set.exclude(normalized_text__isnull=True)
+    elif status_filter == 'pending':
+        query_set = query_set.filter(normalized_text__isnull=True)
+
+    if severity_filter:
+        query_set = query_set.filter(severity=severity_filter)
+
+    # 3. İstatistik Sayaçları (Filtrelemeden bağımsız ana sayılar)
+    base_user_data = Feedback.objects.filter(user=request.user)
+    total_sent = base_user_data.count()
+    processed_count = base_user_data.exclude(normalized_text__isnull=True).count() 
 
     return render(request, 'feedback/user_feedback_list.html', {
-        'feedbacks': user_feedbacks,
-        'total_sent': total_sent,
-        'processed_count': processed_count,
+        'feedbacks': query_set,       # Filtrelenmiş liste
+        'total_sent': total_sent,     # İstatistik Kartı 1
+        'processed_count': processed_count, # İstatistik Kartı 2
     })
 
-# --- SERVICE OWNER DASHBOARD (Cansu's Logic & Aleyna's Design Context) ---
+# --- SERVICE OWNER DASHBOARD (Cansu's Logic Preserved) ---
 @login_required
 def service_owner_dashboard(request):
     """Servis sahibine veya Admin'e gelen feedback'leri listeler"""
     
-    # Cansu'nun eklediği Admin ve Sorumlu kontrolü
+    # Cansu'nun güvenlik kontrollerini koruyoruz
     if request.user.is_superuser:
-        # Admin her şeyi görür
         feedbacks = Feedback.objects.all().order_by('-date')
     elif request.user.managed_services.exists():
-        # Sorumlu sadece kendi hizmetlerini görür
         feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
     else:
-        # Yetkisiz kullanıcıyı ana sayfaya atar
         return redirect('home')
     
     return render(request, 'feedback/dashboard.html', {

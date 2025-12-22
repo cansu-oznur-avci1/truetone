@@ -1,89 +1,137 @@
 {% extends "base.html" %}
 
-{% block title %}My Feedback History | TrueTone{% endblock %}
+{% block title %}Feedback Analytics Hub | TrueTone{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-lg-8 mx-auto text-center">
-            <h1 class="display-5 fw-bold text-dark mb-3">Feedback History</h1>
-            <p class="lead text-muted">View and monitor the status of your submitted feedback in real-time.</p>
-            <div class="d-flex justify-content-center gap-3 mt-4">
-                <a href="{% url 'services:service_list' %}" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
-                    <i class="fas fa-plus me-2"></i>New Submission
-                </a>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8 text-start">
+            <h1 class="display-6 fw-bold text-dark mb-1">Feedback Analytics</h1>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{% url 'services:service_list' %}" class="btn btn-premium-action px-5 py-3 rounded-4 shadow-sm position-relative overflow-hidden">
+                <span class="position-relative z-index-2 fw-bold">
+                    <i class="fas fa-plus-circle me-2"></i>New Submission
+                </span>
+                <div class="btn-hover-effect"></div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-4">
+        <div class="col-md-4">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                <div class="corner-gradient grad-blue"></div>
+                <div class="card-body p-4 position-relative z-index-2 text-start">
+                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">Total Sent</div>
+                    <h2 class="fw-bold mb-0 text-dark">{{ total_sent }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                <div class="corner-gradient grad-green"></div>
+                <div class="card-body p-4 position-relative z-index-2 text-start">
+                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">AI Processed</div>
+                    <h2 class="fw-bold mb-0 text-dark">{{ processed_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                <div class="corner-gradient grad-purple"></div>
+                <div class="card-body p-4 position-relative z-index-2 text-start">
+                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">In Analysis</div>
+                    <h2 class="fw-bold mb-0 text-dark">{{ total_sent|add:"-processed_count" }}</h2>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-5 g-4 text-center">
-        <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 shadow-sm border-0">
-                <div class="text-primary mb-2"><i class="fas fa-paper-plane fa-2x"></i></div>
-                <h3 class="fw-bold mb-0">{{ feedbacks|length }}</h3>
-                <small class="text-uppercase text-muted fw-semibold">Total Sent</small>
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5 bg-white border-bottom border-light">
+        <form method="GET" class="row g-2 align-items-center text-start">
+            <div class="col-lg-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0 pe-0">
+                        <i class="fas fa-search text-muted small"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control border-0 shadow-none ps-2" placeholder="Search keywords in history...">
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 shadow-sm border-0">
-                <div class="text-success mb-2"><i class="fas fa-check-double fa-2x"></i></div>
-                <h3 class="fw-bold mb-0">{% if feedbacks %}{{ feedbacks|length }}{% else %}0{% endif %}</h3>
-                <small class="text-uppercase text-muted fw-semibold">Processed</small>
+            <div class="col-lg-3 col-md-5">
+                <select name="status" class="form-select border-0 shadow-none text-muted fw-medium">
+                    <option value="">Status: All</option>
+                    <option value="processed">AI Processed</option>
+                    <option value="pending">In Review</option>
+                </select>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-4 bg-white rounded-4 shadow-sm border-0">
-                <div class="text-info mb-2"><i class="fas fa-robot fa-2x"></i></div>
-                <h3 class="fw-bold mb-0">{% if feedbacks %}AI Enabled{% else %}Active{% endif %}</h3>
-                <small class="text-uppercase text-muted fw-semibold">Security Engine</small>
+            <div class="col-lg-2 col-md-4">
+                <select name="severity" class="form-select border-0 shadow-none text-muted fw-medium">
+                    <option value="">Severity: All</option>
+                    <option value="4">Critical</option>
+                    <option value="3">High</option>
+                    <option value="2">Medium</option>
+                </select>
             </div>
-        </div>
+            <div class="col-lg-2 col-md-3">
+                <button type="submit" class="btn btn-dark w-100 rounded-3 fw-bold transition-all hover-lift">
+                    FILTER
+                </button>
+            </div>
+        </form>
     </div>
 
     <div class="row">
         {% for fb in feedbacks %}
-        <div class="col-lg-12 mb-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden feedback-card">
-                <div class="row g-0">
-                    <div class="col-md-3 bg-light d-flex flex-column justify-content-center align-items-center border-end p-4 text-center">
-                        <div class="badge rounded-pill mb-3 {% if fb.severity == 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} px-3 py-2">
+        <div class="col-lg-12 mb-4 text-start">
+            <div class="card border-0 shadow-sm rounded-4 feedback-row transition-all overflow-hidden bg-white">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-2 p-4 text-center border-end bg-light-subtle">
+                        <div class="small fw-bold text-muted mb-2 ls-1">SEVERITY</div>
+                        <span class="badge rounded-pill px-3 py-2 w-100 {% if fb.severity == 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} shadow-sm">
                             {% if fb.severity == 4 %}CRITICAL{% elif fb.severity == 3 %}HIGH{% else %}MEDIUM{% endif %}
+                        </span>
+                        <div class="mt-3 text-muted" style="font-size: 0.7rem;">
+                             {{ fb.date|date:"M d, Y" }}
                         </div>
-                        <h5 class="fw-bold text-dark mb-1">{{ fb.service.name }}</h5>
-                        <small class="text-muted"><i class="far fa-calendar-alt me-2"></i>{{ fb.date|date:"M d, Y" }}</small>
                     </div>
-                    <div class="col-md-9 px-4 py-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="col-md-10 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <span class="badge bg-light text-primary border border-primary-subtle me-2">{{ fb.category|upper }}</span>
-                                <span class="badge bg-light text-secondary border border-secondary-subtle">{{ fb.tone|upper }}</span>
+                                <h6 class="fw-extrabold text-dark mb-1">{{ fb.service.name }}</h6>
+                                <span class="badge bg-light text-primary border rounded-pill me-2 px-3">#{{ fb.category|upper }}</span>
+                                <span class="badge bg-light text-secondary border rounded-pill px-3">#{{ fb.tone|upper }}</span>
                             </div>
-                            {% if fb.normalized_text %}
-                                <span class="text-success fw-bold small"><i class="fas fa-magic me-1"></i> AI ENHANCED</span>
-                            {% endif %}
+                            <div class="ai-indicator">
+                                {% if fb.normalized_text %}
+                                <span class="text-success small fw-bold"><i class="fas fa-check-double me-1"></i> ANALYZED</span>
+                                {% else %}
+                                <span class="text-muted small fw-bold"><i class="fas fa-spinner fa-spin me-1"></i> PENDING</span>
+                                {% endif %}
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <h6 class="text-muted small fw-bold text-uppercase mb-2">Original Content:</h6>
-                            <p class="text-dark bg-light-subtle p-3 rounded-3 border-start border-4 border-primary shadow-inner">
-                                "{{ fb.raw_text }}"
-                            </p>
+                        <div class="p-3 bg-light-subtle rounded-3 border-start border-4 border-primary mb-0">
+                            <p class="text-dark mb-0 italic" style="font-size: 0.95rem;">"{{ fb.raw_text }}"</p>
                         </div>
 
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn btn-link text-decoration-none fw-bold p-0">View Details <i class="fas fa-arrow-right ms-1"></i></a>
+                        <div class="d-flex justify-content-end mt-3">
+                            <a href="#" class="text-decoration-none fw-bold small text-primary hover-link">
+                                DETAILS <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-lg-8 mx-auto text-center py-5">
-            <div class="p-5 bg-white rounded-5 shadow-sm border border-2 border-dashed">
-                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" alt="No data" class="mb-4" style="width: 120px; opacity: 0.5;">
-                <h3 class="fw-bold">No feedback yet!</h3>
-                <p class="text-muted mb-4">Your history is empty. Start by sharing your first feedback to help us grow.</p>
-                <a href="{% url 'services:service_list' %}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold">Let's Get Started</a>
+        <div class="col-lg-12 text-center py-5">
+            <div class="p-5 bg-white rounded-4 shadow-sm border border-dashed border-2">
+                <h4 class="fw-bold text-muted">No entries found</h4>
+                <p class="text-muted mb-0">Try adjusting your filters.</p>
             </div>
         </div>
         {% endfor %}
@@ -91,12 +139,70 @@
 </div>
 
 <style>
-    body { background-color: #f8f9fa; }
-    .feedback-card { transition: all 0.3s ease; }
-    .feedback-card:hover { transform: scale(1.01); box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important; }
+    :root { --primary-font: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: #f3f4f6; font-family: var(--primary-font); -webkit-font-smoothing: antialiased; }
+
+    /* --- NEW PREMIUM BUTTON STYLE --- */
+    .btn-premium-action {
+        background: #111cb8bb; /* Deep Navy Base */
+        color: white !important;
+        border: none;
+        transition: all 0.4s ease;
+    }
+
+    .btn-hover-effect {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(145, 186, 195, 0.6), transparent);
+        transition: all 0.6s ease;
+    }
+
+    .btn-premium-action:hover {
+        background: #1e293b;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-premium-action:hover .btn-hover-effect {
+        left: 100%; /* Shimmer effect on hover */
+    }
+
+    /* --- STAT CARDS & GRADIENTS (As requested, same) --- */
+    .stat-card { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); background: #fff; }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12) !important; }
+    
+    .corner-gradient {
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        filter: blur(45px);
+        opacity: 0;
+        transition: all 0.5s ease;
+        z-index: 1;
+    }
+    
+    .stat-card:hover .corner-gradient { opacity: 0.25; transform: scale(3.5); }
+
+    .grad-blue { background: #2563eb; }
+    .grad-green { background: #059669; }
+    .grad-purple { background: #7c3aed; }
+
+    .ls-1 { letter-spacing: 0.05rem; }
+    .fw-extrabold { font-weight: 800; }
+    .italic { font-style: italic; }
+    .bg-light-subtle { background-color: #f9fafb; }
+    
+    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important; }
+    .feedback-row:hover { border-color: #d1d5db; transform: scale(1.005); box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important; }
+    
     .rounded-4 { border-radius: 1.25rem !important; }
-    .rounded-5 { border-radius: 2rem !important; }
-    .bg-light-subtle { background-color: #f1f3f5; }
-    .shadow-inner { box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); }
+    .btn-dark { background: #818ef0ff; border: none; }
+    .btn-primary { background: #2563eb; border: none; }
 </style>
 {% endblock %}
