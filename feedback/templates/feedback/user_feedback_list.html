@@ -1,138 +1,117 @@
 {% extends "base.html" %}
 
-{% block title %}Feedback Analytics Hub | TrueTone{% endblock %}
+{% block title %}Feedback Analytics | TrueTone{% endblock %}
 
 {% block content %}
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <div class="container py-5 animate__animated animate__fadeIn">
     <div class="row mb-5 align-items-center">
         <div class="col-md-8 text-start">
-            <h1 class="display-6 fw-bold text-dark mb-1">Feedback Analytics</h1>
+            <h1 class="h2 fw-800 text-dark mb-1">Feedback Analytics</h1>
+            <p class="text-muted mb-0 small">Monitor and manage your submitted service insights.</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <a href="{% url 'services:service_list' %}" class="btn btn-premium-action px-5 py-3 rounded-4 shadow-sm position-relative overflow-hidden">
-                <span class="position-relative z-index-2 fw-bold">
-                    <i class="fas fa-plus-circle me-2"></i>New Submission
+            <a href="{% url 'services:service_list' %}" class="btn btn-premium-action px-4 py-2 rounded-pill shadow-sm position-relative overflow-hidden border-0">
+                <span class="position-relative z-index-2 fw-bold text-white">
+                    <i class="fas fa-plus me-1"></i> New Submission
                 </span>
                 <div class="btn-hover-effect"></div>
             </a>
         </div>
     </div>
 
-    <div class="row mb-4 g-4">
-        <div class="col-md-4">
-            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+    <div class="row mb-4 g-3">
+        <div class="col-md-4 text-start">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
                 <div class="corner-gradient grad-blue"></div>
-                <div class="card-body p-4 position-relative z-index-2 text-start">
-                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">Total Sent</div>
-                    <h2 class="fw-bold mb-0 text-dark">{{ total_sent }}</h2>
+                <div class="card-body p-4 position-relative z-index-2">
+                    <div class="text-muted small fw-bold text-uppercase ls-1 mb-2">Total Sent</div>
+                    <div class="h2 fw-800 mb-0">{{ total_sent }}</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+        <div class="col-md-4 text-start">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
                 <div class="corner-gradient grad-green"></div>
-                <div class="card-body p-4 position-relative z-index-2 text-start">
-                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">AI Processed</div>
-                    <h2 class="fw-bold mb-0 text-dark">{{ processed_count }}</h2>
+                <div class="card-body p-4 position-relative z-index-2">
+                    <div class="text-uppercase small fw-bold text-muted ls-1 mb-2">AI Processed</div>
+                    <div class="h2 fw-800 text-success mb-0">{{ processed_count }}</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+        <div class="col-md-4 text-start">
+            <div class="card stat-card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
                 <div class="corner-gradient grad-purple"></div>
-                <div class="card-body p-4 position-relative z-index-2 text-start">
-                    <div class="text-uppercase small fw-extrabold text-muted ls-1 mb-3">In Analysis</div>
-                    <h2 class="fw-bold mb-0 text-dark">{{ total_sent|add:"-processed_count" }}</h2>
+                <div class="card-body p-4 position-relative z-index-2">
+                    <div class="text-uppercase small fw-bold text-muted ls-1 mb-2">In Analysis</div>
+                    <div class="h2 fw-800 text-primary mb-0">{{ total_sent|add:"-processed_count" }}</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5 bg-white border-bottom border-light">
-        <form method="GET" class="row g-2 align-items-center text-start">
+    <div class="card border-0 shadow-sm rounded-4 p-2 mb-5 bg-white">
+        <form method="GET" class="row g-2 align-items-center text-start mx-1">
             <div class="col-lg-5">
                 <div class="input-group">
-                    <span class="input-group-text bg-transparent border-0 pe-0">
-                        <i class="fas fa-search text-muted small"></i>
-                    </span>
-                    <input type="text" name="q" class="form-control border-0 shadow-none ps-2" placeholder="Search keywords in history...">
+                    <span class="input-group-text bg-transparent border-0 pe-0"><i class="fas fa-search text-muted small"></i></span>
+                    <input type="text" name="q" class="form-control border-0 shadow-none ps-2" placeholder="Search keywords...">
                 </div>
             </div>
-            <div class="col-lg-3 col-md-5">
+            <div class="col-lg-3">
                 <select name="status" class="form-select border-0 shadow-none text-muted fw-medium">
-                    <option value="" {% if not current_status %}selected{% endif %}>Status: All</option>
-                    <option value="processed" {% if current_status == 'processed' %}selected{% endif %}>AI Processed</option>
-                    <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>In Review</option>
+                    <option value="">Status: All</option>
+                    <option value="processed">AI Processed</option>
+                    <option value="pending">In Review</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-4">
+            <div class="col-lg-2">
                 <select name="severity" class="form-select border-0 shadow-none text-muted fw-medium">
-                    <option value="" {% if not current_severity %}selected{% endif %}>Severity: All</option>
-                    <option value="4" {% if current_severity == '4' %}selected{% endif %}>Critical</option>
-                    <option value="3" {% if current_severity == '3' %}selected{% endif %}>High</option>
-                    <option value="2" {% if current_severity == '2' %}selected{% endif %}>Medium</option>
-                    <option value="1" {% if current_severity == '1' %}selected{% endif %}>Low</option>
+                    <option value="">Severity: All</option>
+                    <option value="4">Critical</option>
+                    <option value="3">High</option>
+                    <option value="2">Medium</option>
                 </select>
             </div>
-            <div class="col-lg-2 col-md-3">
-                <button type="submit" class="btn btn-dark w-100 rounded-3 fw-bold transition-all hover-lift">
-                    FILTER
-                </button>
+            <div class="col-lg-2">
+                <button type="submit" class="btn btn-filter-vibrant w-100 rounded-3 fw-bold btn-sm py-2 shadow-sm transition-all">FILTER</button>
             </div>
         </form>
     </div>
 
-    <div class="row">
+    <div class="row text-start">
         {% for fb in feedbacks %}
-        <div class="col-lg-12 mb-4 text-start">
+        <div class="col-lg-12 mb-3">
             <div class="card border-0 shadow-sm rounded-4 feedback-row transition-all overflow-hidden bg-white">
                 <div class="row g-0 align-items-center">
-                    <div class="col-md-2 p-4 text-center border-end bg-light-subtle">
-                        <div class="small fw-bold text-muted mb-2 ls-1">SEVERITY</div>
-                        <span class="badge rounded-pill px-3 py-2 w-100 {% if fb.severity == 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% elif fb.severity == 2 %}bg-info text-dark{% else %}bg-secondary{% endif %} shadow-sm">
-                            {{ fb.get_severity_display|upper }}
+                    <div class="col-md-2 p-3 text-center border-end bg-light-subtle d-none d-md-block">
+                        <div class="small fw-bold text-muted mb-2 ls-1 text-uppercase">Severity</div>
+                        <span class="badge rounded-pill px-3 py-1 w-100 
+                            {% if fb.severity == 4 %}bg-danger
+                            {% elif fb.severity == 3 %}bg-warning text-dark
+                            {% elif fb.severity == 2 %}bg-info-custom text-white
+                            {% else %}bg-secondary{% endif %} shadow-sm small">
+                            Level {{ fb.severity }}
                         </span>
-                        <div class="mt-3 text-muted" style="font-size: 0.7rem;">
-                             {{ fb.date|date:"M d, Y" }}
-                        </div>
+                        <div class="mt-2 text-muted tiny-text">{{ fb.date|date:"M d, Y" }}</div>
                     </div>
                     <div class="col-md-10 p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <h6 class="fw-extrabold text-dark mb-1">{{ fb.service.name }}</h6>
-                                <span class="badge bg-light text-primary border rounded-pill me-2 px-3">#{{ fb.category|upper }}</span>
-                                <span class="badge bg-light text-secondary border rounded-pill px-3">#{{ fb.tone|upper }}</span>
+                                <h6 class="fw-800 text-dark mb-1">{{ fb.service.name }}</h6>
+                                <span class="badge bg-light text-primary border rounded-pill me-2 px-3 small">#{{ fb.category|upper }}</span>
                             </div>
-                            <div class="ai-indicator">
-                                {% if fb.normalized_text %}
-                                <span class="text-success small fw-bold"><i class="fas fa-check-double me-1"></i> ANALYZED</span>
-                                {% else %}
-                                <span class="text-muted small fw-bold"><i class="fas fa-spinner fa-spin me-1"></i> PENDING</span>
-                                {% endif %}
-                            </div>
+                            {% if fb.normalized_text %}
+                            <span class="text-success small fw-bold"><i class="fas fa-check-double me-1"></i> ANALYZED</span>
+                            {% endif %}
                         </div>
-                        
-                        <div class="p-3 bg-light-subtle rounded-3 border-start border-4 border-primary mb-0">
-                            <p class="text-dark mb-0 italic" style="font-size: 0.95rem;">"{{ fb.raw_text }}"</p>
-                        </div>
-
-                        <div class="d-flex justify-content-end mt-3">
-                            <a href="#" class="text-decoration-none fw-bold small text-primary hover-link">
-                                DETAILS <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
+                        <p class="text-secondary mb-0 fst-italic ps-3 border-start border-3 border-light-subtle">"{{ fb.raw_text|truncatechars:150 }}"</p>
+                        <div class="d-flex justify-content-end mt-2">
+                            <a href="#" class="text-decoration-none fw-bold small text-primary hover-link">DETAILS <i class="fas fa-arrow-right ms-1"></i></a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-lg-12 text-center py-5">
-            <div class="p-5 bg-white rounded-4 shadow-sm border border-dashed border-2">
-                <h4 class="fw-bold text-muted">No entries found</h4>
-                <p class="text-muted mb-0">Try adjusting your filters.</p>
             </div>
         </div>
         {% endfor %}
@@ -140,70 +119,30 @@
 </div>
 
 <style>
-    :root { --primary-font: 'Plus Jakarta Sans', sans-serif; }
-    body { background-color: #f3f4f6; font-family: var(--primary-font); -webkit-font-smoothing: antialiased; }
-
-    /* --- NEW PREMIUM BUTTON STYLE --- */
-    .btn-premium-action {
-        background: #111cb8bb; /* Deep Navy Base */
-        color: white !important;
-        border: none;
-        transition: all 0.4s ease;
-    }
-
-    .btn-hover-effect {
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(145, 186, 195, 0.6), transparent);
-        transition: all 0.6s ease;
-    }
-
-    .btn-premium-action:hover {
-        background: #1e293b;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
-
-    .btn-premium-action:hover .btn-hover-effect {
-        left: 100%; /* Shimmer effect on hover */
-    }
-
-    /* --- STAT CARDS & GRADIENTS (As requested, same) --- */
-    .stat-card { transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); background: #fff; }
-    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12) !important; }
-    
-    .corner-gradient {
-        position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        filter: blur(45px);
-        opacity: 0;
-        transition: all 0.5s ease;
-        z-index: 1;
-    }
-    
-    .stat-card:hover .corner-gradient { opacity: 0.25; transform: scale(3.5); }
-
-    .grad-blue { background: #2563eb; }
-    .grad-green { background: #059669; }
-    .grad-purple { background: #7c3aed; }
-
+    :root { --primary-blue: #2563eb; }
+    body { background-color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .fw-800 { font-weight: 800; }
     .ls-1 { letter-spacing: 0.05rem; }
-    .fw-extrabold { font-weight: 800; }
-    .italic { font-style: italic; }
+    .rounded-4 { border-radius: 1rem !important; }
+    .tiny-text { font-size: 0.7rem; }
     .bg-light-subtle { background-color: #f9fafb; }
-    
-    .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important; }
-    .feedback-row:hover { border-color: #d1d5db; transform: scale(1.005); box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important; }
-    
-    .rounded-4 { border-radius: 1.25rem !important; }
-    .btn-dark { background: #818ef0ff; border: none; }
-    .btn-primary { background: #2563eb; border: none; }
+    .bg-info-custom { background-color: #0ea5e9 !important; }
+
+    /* New Submission */
+    .btn-premium-action { background-color: var(--primary-blue); border: none; transition: 0.3s; }
+    .btn-premium-action:hover { background-color: #1d4ed8 !important; transform: translateY(-2px); }
+    .btn-hover-effect { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: 0.6s; }
+    .btn-premium-action:hover .btn-hover-effect { left: 100%; }
+
+    /* Filter Button */
+    .btn-filter-vibrant { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd !important; }
+    .btn-filter-vibrant:hover { background-color: #0369a1; color: white !important; transform: translateY(-1px); }
+
+    /* Cards */
+    .stat-card:hover { transform: translateY(-5px); }
+    .corner-gradient { position: absolute; top: -40px; right: -40px; width: 100px; height: 100px; border-radius: 50%; filter: blur(35px); opacity: 0; transition: 0.4s; }
+    .stat-card:hover .corner-gradient { opacity: 0.2; transform: scale(3.5); }
+    .grad-blue { background: #3b82f6; } .grad-green { background: #10b981; } .grad-purple { background: #8b5cf6; }
+    .feedback-row:hover { border-color: #e2e8f0; transform: scale(1.002); }
 </style>
 {% endblock %}

@@ -30,6 +30,7 @@ class FeedbackForm(forms.ModelForm):
         # 1. Veriyi al ve başındaki/sonundaki boşlukları temizle
         raw_text = self.cleaned_data.get('raw_text', '').strip()
 
+
         # 2. Önce tamamen boş olup olmadığını kontrol et
         if not raw_text:
             raise forms.ValidationError("Feedback field cannot be empty.")
