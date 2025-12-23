@@ -20,11 +20,14 @@ def submit_feedback(request, service_id):
             # --- AI ANALİZİ BURADA BAŞLIYOR ---
             analysis = analyze_feedback_with_ai(feedback.raw_text)
             if analysis:
-                feedback.category = analysis.get('category', 'other')
-                feedback.severity = analysis.get('severity', 1)
-                feedback.tone = analysis.get('tone', 'neutral')
-                feedback.intent = analysis.get('intent', 'complaint')
-            # ---------------------------------  
+                # Küçük harf uyumu için .lower() kullanıyoruz
+                feedback.category = str(analysis.get('category', 'other')).lower()
+                feedback.severity = int(analysis.get('severity', 1))
+                feedback.tone = str(analysis.get('tone', 'neutral')).lower()
+                feedback.intent = str(analysis.get('intent', 'complaint')).lower()
+                # AI tarafından normalleştirilen metin
+                feedback.normalized_text = analysis.get('normalized_text', feedback.raw_text)            # ---------------------------------  
+            #----------------------------------------------------
             feedback.save() 
             return render(request, 'feedback/success.html', {'feedback': feedback})
     else:
