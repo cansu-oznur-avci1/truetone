@@ -11,19 +11,29 @@ def analyze_feedback_with_ai(raw_text):
         print("DEBUG: API KEY is missing in .env file!")
         return None
         
-    try:
-        # Client'ı oluştururken otomatik olarak güncel v1 sürümünü kullanır
-        client = genai.Client(api_key=api_key)
-        
-        prompt = f"""
-        Analyze the university feedback: "{raw_text}"
-        Return ONLY a JSON object with these EXACT lowercase keys:
-        - "category": choose from ["technical", "service", "staff", "other"]
-        - "severity": choose integer from [1, 2, 3, 4]
-        - "tone": choose from ["aggressive", "neutral", "polite", "disappointed"]
-        - "intent": choose from ["complaint", "suggestion", "praise", "question"]
-        """
 
+        # Client'ı oluştururken otomatik olarak güncel v1 sürümünü kullanır
+    client = genai.Client(api_key=api_key)
+        
+    prompt = f"""
+    Analyze and normalize this university feedback: "{raw_text}"
+
+    1. Analyze categories: category, severity (1-4), tone, intent.
+    2. Rewrite the text into a professional, polite, and constructive version. 
+        - Remove any insults or aggressive language.
+        - Keep the original meaning but make it sound formal (e.g., suitable for a dean's report).
+    
+    Return ONLY a JSON object:
+    {{
+        "category": "technical/service/staff/other",
+        "severity": 1, 2, 3, or 4,
+        "tone": "aggressive/neutral/polite/disappointed",
+        "intent": "complaint/suggestion/praise/question",
+        "normalized_text": "The professional version here"
+    }}
+    """
+
+    try:
         # Model ismini 'models/gemini-1.5-flash' olarak yalın halde gönderiyoruz
         response = client.models.generate_content(
             model="gemini-flash-latest", 

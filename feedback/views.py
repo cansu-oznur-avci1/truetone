@@ -25,9 +25,9 @@ def submit_feedback(request, service_id):
                 feedback.severity = int(analysis.get('severity', 1))
                 feedback.tone = str(analysis.get('tone', 'neutral')).lower()
                 feedback.intent = str(analysis.get('intent', 'complaint')).lower()
-                # Analiz başarılıysa bir işaret koyalım (Opsiyonel)
-                feedback.normalized_text = "AI-Analyzed: " + feedback.raw_text
-            # ---------------------------------  
+                # AI tarafından normalleştirilen metin
+                feedback.normalized_text = analysis.get('normalized_text', feedback.raw_text)            # ---------------------------------  
+            #----------------------------------------------------
             feedback.save() 
             return render(request, 'feedback/success.html', {'feedback': feedback})
     else:

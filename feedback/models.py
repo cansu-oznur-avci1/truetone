@@ -86,23 +86,9 @@ class Feedback(models.Model):
     # Normalleştirme Mekanizması [cite: 37, 38]
     def save(self, *args, **kwargs):
         # FR-14: Normalleştirme süreci sadece kısa açıklama alanına uygulanır [cite: 68]
+        # Eğer birisi manuel bir normalized_text göndermemişse 
+        # (yani AI henüz çalışmamışsa) varsayılan olarak raw_text atayabiliriz.
         if not self.normalized_text:
-            text = self.raw_text.lower()
-
-            # FR-35 & FR-66: Özel karakterleri ( < , > ) temizleyerek güvenliği sağla [cite: 35, 66]
-            text = re.sub(r'<[^>]*?>', '', text) 
-            # FR-15 & FR-69: Agresif veya duygusal ifadeleri tespit et [cite: 38, 69]
-            rules = {
-                r"(terrible|awful|disgusting)": "did not meet expectations",
-                r"(slow|late|waited)": "process needs acceleration",
-                r"(bad|ugly)": "open to improvement",
-                r"(stupid|nonsense)": "could be more professional"
-            }   
-            for pattern, replacement in rules.items():
-                text = re.sub(pattern, replacement, text)
-
-            # FR-70: Nazik ve nötr versiyonu oluştur [cite: 70]
-            self.normalized_text = text.capitalize() 
-        
-        # FR-17 & FR-71: Hem ham hem de normalize metni veritabanına kaydet [cite: 39, 71]
+            self.normalized_text = self.raw_text
+            
         super().save(*args, **kwargs)
