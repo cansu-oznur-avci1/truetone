@@ -5,6 +5,7 @@ from services.models import Service
 from .forms import FeedbackForm
 from .models import Feedback
 from django.db.models import Q
+from .utils import analyze_feedback_with_ai
 
 @login_required 
 def submit_feedback(request, service_id): 
@@ -15,7 +16,15 @@ def submit_feedback(request, service_id):
         if form.is_valid():
             feedback = form.save(commit=False)
             feedback.user = request.user 
-            feedback.service = service   
+            feedback.service = service 
+            # --- AI ANALİZİ BURADA BAŞLIYOR ---
+            analysis = analyze_feedback_with_ai(feedback.raw_text)
+            if analysis:
+                feedback.category = analysis.get('category', 'other')
+                feedback.severity = analysis.get('severity', 1)
+                feedback.tone = analysis.get('tone', 'neutral')
+                feedback.intent = analysis.get('intent', 'complaint')
+            # ---------------------------------  
             feedback.save() 
             return render(request, 'feedback/success.html', {'feedback': feedback})
     else:
