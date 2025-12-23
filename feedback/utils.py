@@ -21,8 +21,8 @@ def analyze_feedback_with_ai(raw_text):
     1. Analyze categories: category, severity (1-4), tone, intent.
     2. Rewrite the text into a professional, polite, and constructive version. 
         - Remove any insults or aggressive language.
-        - Keep the original meaning but make it sound formal (e.g., suitable for a dean's report).
-    
+        - Keep the original meaning but make it sound formal (e.g., suitable for a dean's report).    
+
     Return ONLY a JSON object:
     {{
         "category": "technical/service/staff/other",
@@ -31,6 +31,14 @@ def analyze_feedback_with_ai(raw_text):
         "intent": "complaint/suggestion/praise/question",
         "normalized_text": "The professional version here"
     }}
+
+    ...
+    Strictly use this scale for Severity:
+    1 - Low: Personal opinions, minor suggestions, or positive feedback.
+    2 - Medium: Small inconveniences (e.g., slow service, temperature issues).
+    3 - High: Operational problems affecting daily life (e.g., internet out, rude staff).
+    4 - Critical: Security threats, health hazards, or total system failures.
+    ...
     """
 
     try:
