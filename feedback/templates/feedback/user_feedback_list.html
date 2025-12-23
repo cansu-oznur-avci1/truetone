@@ -63,17 +63,18 @@
             </div>
             <div class="col-lg-3 col-md-5">
                 <select name="status" class="form-select border-0 shadow-none text-muted fw-medium">
-                    <option value="">Status: All</option>
-                    <option value="processed">AI Processed</option>
-                    <option value="pending">In Review</option>
+                    <option value="" {% if not current_status %}selected{% endif %}>Status: All</option>
+                    <option value="processed" {% if current_status == 'processed' %}selected{% endif %}>AI Processed</option>
+                    <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>In Review</option>
                 </select>
             </div>
             <div class="col-lg-2 col-md-4">
                 <select name="severity" class="form-select border-0 shadow-none text-muted fw-medium">
-                    <option value="">Severity: All</option>
-                    <option value="4">Critical</option>
-                    <option value="3">High</option>
-                    <option value="2">Medium</option>
+                    <option value="" {% if not current_severity %}selected{% endif %}>Severity: All</option>
+                    <option value="4" {% if current_severity == '4' %}selected{% endif %}>Critical</option>
+                    <option value="3" {% if current_severity == '3' %}selected{% endif %}>High</option>
+                    <option value="2" {% if current_severity == '2' %}selected{% endif %}>Medium</option>
+                    <option value="1" {% if current_severity == '1' %}selected{% endif %}>Low</option>
                 </select>
             </div>
             <div class="col-lg-2 col-md-3">
@@ -91,8 +92,8 @@
                 <div class="row g-0 align-items-center">
                     <div class="col-md-2 p-4 text-center border-end bg-light-subtle">
                         <div class="small fw-bold text-muted mb-2 ls-1">SEVERITY</div>
-                        <span class="badge rounded-pill px-3 py-2 w-100 {% if fb.severity == 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} shadow-sm">
-                            {% if fb.severity == 4 %}CRITICAL{% elif fb.severity == 3 %}HIGH{% else %}MEDIUM{% endif %}
+                        <span class="badge rounded-pill px-3 py-2 w-100 {% if fb.severity == 4 %}bg-danger{% elif fb.severity == 3 %}bg-warning text-dark{% elif fb.severity == 2 %}bg-info text-dark{% else %}bg-secondary{% endif %} shadow-sm">
+                            {{ fb.get_severity_display|upper }}
                         </span>
                         <div class="mt-3 text-muted" style="font-size: 0.7rem;">
                              {{ fb.date|date:"M d, Y" }}
