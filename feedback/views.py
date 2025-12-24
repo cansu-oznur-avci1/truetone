@@ -83,16 +83,39 @@ def user_feedback_list(request):
 # --- SERVICE OWNER DASHBOARD (Cansu's Logic Preserved) ---
 @login_required
 def service_owner_dashboard(request):
-    """Servis sahibine veya Admin'e gelen feedback'leri listeler"""
+    """Servis sahibine veya Admin'e gelen feedback'leri filtreleyerek listeler"""
     
-    # Cansu'nun güvenlik kontrollerini koruyoruz
+    # 1. İlk olarak kullanıcının yetkisine göre ana listeyi belirle
     if request.user.is_superuser:
         feedbacks = Feedback.objects.all().order_by('-date')
     elif request.user.managed_services.exists():
         feedbacks = Feedback.objects.filter(service__owner=request.user).order_by('-date')
     else:
         return redirect('home')
-    
+
+    # 2. HTML formundan gelen filtre değerlerini yakala (Aleyna'nın name etiketlerine göre)
+    search_query = request.GET.get('q', '')
+    status_filter = request.GET.get('status', '')
+    severity_filter = request.GET.get('severity', '')
+
+    # 3. Filtreleri uygula
+    if search_query:
+        feedbacks = feedbacks.filter(
+            Q(raw_text__icontains=search_query) | 
+            Q(service__name__icontains=search_query)
+        )
+
+    if status_filter == 'processed':
+        feedbacks = feedbacks.exclude(normalized_text__isnull=True).exclude(normalized_text="")
+    elif status_filter == 'pending':
+        feedbacks = feedbacks.filter(Q(normalized_text__isnull=True) | Q(normalized_text=""))
+
+    if severity_filter:
+        # IntegerField olduğu için int çevrimi yapıyoruz
+        feedbacks = feedbacks.filter(severity=int(severity_filter))
+
+    # 4. Verileri sayfaya gönder
     return render(request, 'feedback/dashboard.html', {
-        'feedbacks': feedbacks
+        'feedbacks': feedbacks,
+        'request': request  # Bu satır Aleyna'nın "selected" (seçili kalma) mantığı için önemli
     })
