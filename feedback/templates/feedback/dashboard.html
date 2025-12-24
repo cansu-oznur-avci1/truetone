@@ -8,8 +8,8 @@
 <div class="container py-5">
     <div class="row mb-5 animate__animated animate__fadeIn">
         <div class="col-lg-12">
-            <div class="main-banner p-5 rounded-5 border-0 shadow-lg text-white position-relative overflow-hidden">
-                <div class="position-relative z-index-2 text-start">
+            <div class="main-banner p-5 rounded-5 border-0 shadow-lg text-white position-relative overflow-hidden text-start">
+                <div class="position-relative z-index-2">
                     <h1 class="display-5 fw-bold mb-2">Service Owner Dashboard</h1>
                     <p class="lead opacity-75">Live monitoring & AI-optimized feedback analytics.</p>
                 </div>
@@ -18,11 +18,11 @@
         </div>
     </div>
 
-    <div class="row g-4 mb-5">
+    <div class="row g-4 mb-5 text-start">
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white p-4">
                 <div class="d-flex align-items-center justify-content-between">
-                    <div class="text-start">
+                    <div>
                         <h6 class="text-muted small fw-bold text-uppercase mb-2">Total Feedbacks</h6>
                         <h2 class="fw-black text-dark mb-0">{{ feedbacks|length }}</h2>
                     </div>
@@ -33,9 +33,9 @@
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white p-4">
                 <div class="d-flex align-items-center justify-content-between">
-                    <div class="text-start">
+                    <div>
                         <h6 class="text-muted small fw-bold text-uppercase mb-2">AI Normalization</h6>
-                        <h2 class="fw-black text-success mb-0 pulse-text">ACTIVE</h2>
+                        <h2 class="fw-black text-success mb-0">ACTIVE</h2>
                     </div>
                     <div class="icon-wrap bg-success-subtle text-success"><i class="fas fa-robot"></i></div>
                 </div>
@@ -44,7 +44,7 @@
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm rounded-4 stat-card-premium bg-white p-4">
                 <div class="d-flex align-items-center justify-content-between">
-                    <div class="text-start">
+                    <div>
                         <h6 class="text-muted small fw-bold text-uppercase mb-2">Data Privacy</h6>
                         <h2 class="fw-black text-info mb-0">ENABLED</h2>
                     </div>
@@ -54,19 +54,44 @@
         </div>
     </div>
 
+    <div class="card border-0 shadow-sm rounded-4 p-2 mb-4 bg-white">
+        <form method="GET" class="row g-2 align-items-center text-start mx-1">
+            <div class="col-lg-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0 pe-0"><i class="fas fa-search text-muted small"></i></span>
+                    <input type="text" name="q" value="{{ request.GET.q }}" class="form-control border-0 shadow-none ps-2" placeholder="Search...">
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <select name="status" class="form-select border-0 shadow-none text-muted fw-medium">
+                    <option value="" {% if not request.GET.status %}selected{% endif %}>Status: All</option>
+                    <option value="processed" {% if request.GET.status == 'processed' %}selected{% endif %}>AI Processed</option>
+                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>In Review</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <select name="severity" class="form-select border-0 shadow-none text-muted fw-medium">
+                    <option value="" {% if not request.GET.severity %}selected{% endif %}>Severity: All</option>
+                    <option value="4" {% if request.GET.severity == "4" %}selected{% endif %}>Critical</option>
+                    <option value="3" {% if request.GET.severity == "3" %}selected{% endif %}>High</option>
+                    <option value="2" {% if request.GET.severity == "2" %}selected{% endif %}>Medium</option>
+                    <option value="1" {% if request.GET.severity == "1" %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold btn-sm py-2 shadow-sm">FILTER</button>
+            </div>
+        </form>
+    </div>
+
     <div class="card border-0 shadow-lg rounded-5 overflow-hidden animate__animated animate__slideInUp">
-        <div class="card-header bg-white py-4 px-4 d-flex justify-content-between align-items-center border-0">
-            <h4 class="mb-0 fw-bold text-dark"><i class="fas fa-stream me-2 text-primary"></i>Recent Submissions</h4>
-            <span class="badge bg-soft-primary text-primary rounded-pill px-3 py-2"><i class="fas fa-sync fa-spin me-2"></i>Live Data</span>
-        </div>
-        
         <div class="table-responsive">
             <table class="table table-borderless align-middle mb-0">
                 <thead>
                     <tr class="bg-light-subtle border-bottom">
                         <th class="ps-5 py-4 text-muted small fw-bold text-uppercase text-start">Service</th>
                         <th class="py-4 text-muted small fw-bold text-uppercase text-center">Severity</th>
-                        <th class="py-4 text-muted small fw-bold text-uppercase text-start" style="width: 45%;">AI Optimized Content</th>
+                        <th class="py-4 text-muted small fw-bold text-uppercase text-center" style="width: 45%;">AI Optimized Content</th>
                         <th class="pe-5 py-4 text-muted small fw-bold text-uppercase text-end">Date</th>
                     </tr>
                 </thead>
@@ -75,8 +100,8 @@
                     <tr class="hover-row-glow transition-all">
                         <td class="ps-5 text-start">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-icon bg-dark text-white rounded-3 me-3">{{ fb.service.name|slice:":1" }}</div>
-                                <div>
+                                <div class="avatar-icon text-white">{{ fb.service.name|slice:":1" }}</div>
+                                <div class="ms-3">
                                     <div class="fw-bold text-dark">{{ fb.service.name }}</div>
                                     <small class="text-primary fw-bold" style="font-size: 0.65rem;">{{ fb.category|upper }}</small>
                                 </div>
@@ -91,14 +116,14 @@
                                 Level {{ fb.severity }}
                             </span>
                         </td>
-                        <td class="text-start">
-                            <div class="p-3 rounded-4 bg-light border-0 ai-bubble shadow-sm">
+                        <td class="text-center px-4">
+                            <div class="p-3 rounded-4 bg-light border-0 ai-bubble shadow-sm w-100">
                                 <p class="mb-0 text-secondary small italic">
-                                    <i class="fas fa-magic me-2 text-primary opacity-50"></i>{{ fb.normalized_text|default:"Awaiting analysis..." }}
+                                    {{ fb.normalized_text|default:"Analysis result will appear here." }}
                                 </p>
                             </div>
                         </td>
-                        <td class="pe-5 text-end text-start">
+                        <td class="pe-5 text-end">
                             <div class="fw-bold text-dark small">{{ fb.date|date:"M d, Y" }}</div>
                             <div class="text-muted" style="font-size: 0.7rem;">{{ fb.date|date:"H:i A" }}</div>
                         </td>
@@ -115,12 +140,21 @@
     body { background-color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
     .main-banner { background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%); }
     .banner-circle { position: absolute; top: -50px; right: -50px; width: 250px; height: 250px; background: rgba(255,255,255,0.1); border-radius: 50%; }
-    .stat-card-premium:hover { transform: translateY(-8px); border-color: #3b82f6; }
-    .icon-wrap { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 15px; font-size: 1.25rem; }
+    
+    .avatar-icon { 
+        width: 48px; height: 48px; 
+        display: flex; align-items: center; justify-content: center; 
+        font-weight: 800; border-radius: 12px;
+        background-color: #1e293b; flex-shrink: 0;
+    }
+
+    .ai-bubble { 
+        display: flex; align-items: center; justify-content: center;
+        min-height: 80px; text-align: center;
+    }
+
     .bg-info-custom { background-color: #0ea5e9 !important; box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2); }
     .hover-row-glow:hover { background-color: #ffffff !important; transform: scale(1.005); }
-    .pulse-text { animation: pulse-opacity 2s infinite; }
-    @keyframes pulse-opacity { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     .fw-black { font-weight: 800; }
     .bg-light-subtle { background-color: #f9fafb; }
 </style>
