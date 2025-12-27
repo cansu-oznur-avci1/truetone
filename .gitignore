@@ -1,3 +1,5 @@
 __pycache__/
 .env
 venv/
+db.sqlite3
+operations_commands.sql

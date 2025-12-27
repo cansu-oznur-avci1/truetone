@@ -3,7 +3,7 @@
 SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
 FROM feedback_feedback f
 JOIN services_service s ON f.service_id = s.id
-WHERE f.user_id = 9;
+WHERE f.user_id = 6;
 
 SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
 FROM feedback_feedback f
