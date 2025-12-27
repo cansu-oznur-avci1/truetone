@@ -42,7 +42,6 @@ class Feedback(models.Model):
     )
 
     # HATA 2 (Service): 'app_adi.ModelAdi' şeklinde tam yol veriyoruz [cite: 32]
-    # Eğer senin servis uygulamanın klasör adı 'services' ise aşağıyı öyle güncelle:
     service = models.ForeignKey(
         'services.Service', 
         on_delete=models.CASCADE, 
@@ -59,13 +58,11 @@ class Feedback(models.Model):
     tone = models.CharField(
         max_length=20, 
         choices=TONE_CHOICES, 
-        default='neutral',
         help_text="Detected user tone"
     )
     intent = models.CharField(
         max_length=20, 
         choices=INTENT_CHOICES, 
-        default='complaint',
         help_text="Detected user intent"
     )
     
