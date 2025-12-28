@@ -10,17 +10,13 @@ from .utils import analyze_feedback_with_ai
 
 @login_required 
 def submit_feedback(request, service_id): 
-    """Kullanıcının geri bildirim gönderdiği yer"""
     service = get_object_or_404(Service, id=service_id) 
-    
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback = form.save(commit=False)
             feedback.user = request.user 
             feedback.service = service 
-            
-            # AI Analizi
             analysis = analyze_feedback_with_ai(feedback.raw_text)
             if analysis:
                 feedback.category = str(analysis.get('category', 'other')).lower()
@@ -28,32 +24,25 @@ def submit_feedback(request, service_id):
                 feedback.tone = str(analysis.get('tone', 'neutral')).lower()
                 feedback.intent = str(analysis.get('intent', 'complaint')).lower()
                 feedback.normalized_text = analysis.get('normalized_text', feedback.raw_text)
-            
             feedback.save() 
             return render(request, 'feedback/success.html', {'feedback': feedback})
     else:
         form = FeedbackForm()
-    
     return render(request, 'feedback/submit_feedback.html', {'form': form, 'service': service})
 
 @login_required
 def user_feedback_list(request):
-    """Kullanıcının kendi feedback geçmişi"""
     query_set = Feedback.objects.filter(user=request.user).order_by('-date')
     search_query = request.GET.get('q', '')
     if search_query:
         query_set = query_set.filter(raw_text__icontains=search_query)
-
     total_sent = query_set.count()
-    return render(request, 'feedback/user_feedback_list.html', {
-        'feedbacks': query_set,
-        'total_sent': total_sent,
-    })
+    return render(request, 'feedback/user_feedback_list.html', {'feedbacks': query_set, 'total_sent': total_sent})
 
 @login_required
 def service_owner_dashboard(request):
-    """Admin ve Service Owner Dinamik Dashboard"""
-    # 1. Yetki Kontrolü
+    """Cansu'nun belirttiği aynı isimli servisleri ayırma sorunu burada çözüldü"""
+    # 1. Yetki Kontrolü (Korundu)
     if request.user.is_superuser:
         feedbacks = Feedback.objects.all().order_by('-date')
     elif request.user.managed_services.exists():
@@ -61,7 +50,7 @@ def service_owner_dashboard(request):
     else:
         return redirect('home')
 
-    # 2. Filtreler
+    # 2. Filtreler (Korundu)
     q = request.GET.get('q', '')
     start_date = request.GET.get('start_date', '')
     end_date = request.GET.get('end_date', '')
@@ -76,16 +65,17 @@ def service_owner_dashboard(request):
     if severity_f:
         feedbacks = feedbacks.filter(severity=int(severity_f))
 
-    # 3. Dinamik Grafik Mantığı (Cansu'nun istediği düzenleme)
-    # Admin bir servis aratmışsa veya kullanıcı Service Owner ise -> SEVERITY göster
+    # 3. Dinamik Grafik Mantığı (Cansu'nun isteğine göre düzenlendi)
     if (request.user.is_superuser and q) or not request.user.is_superuser:
+        # Severity Grafiği
         chart_stats = feedbacks.values('severity').annotate(count=Count('id')).order_by('severity')
         labels = [f"Level {item['severity']}" for item in chart_stats]
         chart_title = "Severity Level Distribution"
     else:
-        # Admin genel bakıştaysa -> SERVİS DAĞILIMI göster
-        chart_stats = feedbacks.values('service__name').annotate(count=Count('id'))
-        labels = [item['service__name'] for item in chart_stats]
+        # Admin Genel Bakış: Servisleri ID ve İsimle grupla (Aynı isimli kütüphaneleri ayırır)
+        chart_stats = feedbacks.values('service__id', 'service__name').annotate(count=Count('id'))
+        # Eğer aynı isimli servis varsa yanına küçük ID ekleyerek ayırt edilmesini sağlıyoruz
+        labels = [f"{item['service__name']} (#{item['service__id']})" for item in chart_stats]
         chart_title = "Service Feedback Distribution"
 
     data = [item['count'] for item in chart_stats]
