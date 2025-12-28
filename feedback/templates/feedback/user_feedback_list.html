@@ -71,6 +71,8 @@
                 <select name="severity" class="form-select border-0 bg-light shadow-none text-muted fw-medium rounded-3">
                     <option value="" {% if not request.GET.severity %}selected{% endif %}>Severity: All</option>
                     <option value="4" {% if request.GET.severity == "4" %}selected{% endif %}>Critical</option>
+                    <option value="3" {% if request.GET.severity == "3" %}selected{% endif %}>High</option>
+                    <option value="2" {% if request.GET.severity == "2" %}selected{% endif %}>Medium</option>
                     <option value="1" {% if request.GET.severity == "1" %}selected{% endif %}>Low</option>
                 </select>
             </div>

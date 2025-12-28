@@ -84,8 +84,21 @@
                 <label class="small fw-bold text-muted mb-1 ms-1">End Date</label>
                 <input type="date" name="end_date" value="{{ request.GET.end_date }}" class="form-control border-0 bg-light shadow-none rounded-3">
             </div>
+            {% if is_admin %}
             <div class="col-lg-2">
-                <label class="small fw-bold text-muted mb-1 ms-1">Min. Severity</label>
+                <label class="small fw-bold text-muted mb-1 ms-1">Target Service</label>
+                <select name="service_filter" class="form-select border-0 bg-light shadow-none rounded-3 text-muted fw-medium">
+                    <option value="">Global (All Services)</option>
+                    {% for s in all_services %}
+                        <option value="{{ s.id }}" {% if request.GET.service_filter == s.id|stringformat:"i" %}selected{% endif %}>
+                            {{ s.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <div class="col-lg-2">
+                <label class="small fw-bold text-muted mb-1 ms-1">Severity</label>
                 <select name="severity" class="form-select border-0 bg-light shadow-none rounded-3 text-muted fw-medium">
                     <option value="">All Levels</option>
                     <option value="4" {% if request.GET.severity == "4" %}selected{% endif %}>Critical (L4)</option>
@@ -175,17 +188,41 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('dynamicChart').getContext('2d');
+        const rawLabels = {{ labels|safe }};
+        
+        // Severity seviyelerine göre sabit renkler tanımlıyoruz
+        const severityPalette = {
+            'Level 4': '#ef4444', // Red
+            'Level 3': '#f59e0b', // Amber
+            'Level 2': '#0ea5e9', // Blue
+            'Level 1': '#10b981'  // Emerald
+        };
+
+        // Servis dağılımı (Admin Global View) için canlı ve zıt renk paleti
+        const servicePalette = [
+            '#6366f1', // Indigo
+            '#ec4899', // Pembe
+            '#8b5cf6', // Mor
+            '#f97316', // Turuncu
+            '#06b6d4', // Turkuaz
+            '#10b981'  // Emerald Yeşil
+        ];
+
+        // Renk atama mantığı
+        const backgroundColors = rawLabels.map((label, index) => 
+            severityPalette[label] || servicePalette[index % servicePalette.length]
+        );
+
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                // views.py'dan gelen benzersiz servis isimleri (#ID ile birlikte) buraya basılıyor
-                labels: {{ labels|safe }},
+                labels: rawLabels,
                 datasets: [{
                     data: {{ data|safe }},
-                    backgroundColor: ['#ef4444', '#f59e0b', '#0ea5e9', '#10b981', '#6366f1', '#8b5cf6'],
+                    backgroundColor: backgroundColors,
                     borderWidth: 3,
                     borderColor: '#ffffff',
-                    hoverOffset: 25 // Hover etkisini biraz daha belirginleştirdik
+                    hoverOffset: 25
                 }]
             },
             options: {
@@ -197,15 +234,9 @@
                         labels: { 
                             usePointStyle: true, 
                             font: { size: 12, weight: '600', family: 'Plus Jakarta Sans' }, 
-                            padding: 20 
+                            padding: 20,
+                            font: { size: 12, weight: '600', family: 'Plus Jakarta Sans' }
                         } 
-                    },
-                    tooltip: {
-                        backgroundColor: '#1e293b',
-                        titleFont: { size: 14 },
-                        bodyFont: { size: 13 },
-                        padding: 12,
-                        cornerRadius: 8
                     }
                 },
                 cutout: '75%',

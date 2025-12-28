@@ -42,6 +42,7 @@ def user_feedback_list(request):
 @login_required
 def service_owner_dashboard(request):
     """Cansu'nun belirttiği aynı isimli servisleri ayırma sorunu burada çözüldü"""
+    all_services = Service.objects.all() if request.user.is_superuser else None
     # 1. Yetki Kontrolü (Korundu)
     if request.user.is_superuser:
         feedbacks = Feedback.objects.all().order_by('-date')
@@ -55,6 +56,7 @@ def service_owner_dashboard(request):
     start_date = request.GET.get('start_date', '')
     end_date = request.GET.get('end_date', '')
     severity_f = request.GET.get('severity', '')
+    service_id_f = request.GET.get('service_filter', '')
 
     if q:
         feedbacks = feedbacks.filter(Q(raw_text__icontains=q) | Q(service__name__icontains=q))
@@ -64,24 +66,30 @@ def service_owner_dashboard(request):
         feedbacks = feedbacks.filter(date__date__lte=parse_date(end_date))
     if severity_f:
         feedbacks = feedbacks.filter(severity=int(severity_f))
+    if service_id_f:
+        feedbacks = feedbacks.filter(service_id=service_id_f)
 
-    # 3. Dinamik Grafik Mantığı (Cansu'nun isteğine göre düzenlendi)
-    if (request.user.is_superuser and q) or not request.user.is_superuser:
-        # Severity Grafiği
+    # 3. Dinamik Grafik Mantığı 
+    # Koşul: Eğer bir servis seçilmişse VEYA kullanıcı Service Owner ise -> SEVERITY GÖSTER
+    if service_id_f or not request.user.is_superuser:
         chart_stats = feedbacks.values('severity').annotate(count=Count('id')).order_by('severity')
         labels = [f"Level {item['severity']}" for item in chart_stats]
         chart_title = "Severity Level Distribution"
+    
+    # Koşul: Admin henüz servis seçmemişse -> SERVİS DAĞILIMI GÖSTER
     else:
-        # Admin Genel Bakış: Servisleri ID ve İsimle grupla (Aynı isimli kütüphaneleri ayırır)
-        chart_stats = feedbacks.values('service__id', 'service__name').annotate(count=Count('id'))
-        # Eğer aynı isimli servis varsa yanına küçük ID ekleyerek ayırt edilmesini sağlıyoruz
+        # Admin Genel Bakış: Servisleri sadece isimlerine göre gruplayıp sayılarını topluyoruz
+        chart_stats = feedbacks.values('service__name').annotate(count=Count('id')).order_by('-count')
+        
+        # Etiketleri (Service Names) hazırlıyoruz
         labels = [item['service__name'] for item in chart_stats]
-        chart_title = "Service Feedback Distribution"
+        chart_title = "Global Service Feedback Distribution"
 
     data = [item['count'] for item in chart_stats]
 
     return render(request, 'feedback/dashboard.html', {
         'feedbacks': feedbacks,
+        'all_services': all_services, 
         'labels': json.dumps(labels),
         'data': json.dumps(data),
         'chart_title': chart_title,
