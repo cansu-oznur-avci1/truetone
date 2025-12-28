@@ -75,7 +75,7 @@ def service_owner_dashboard(request):
         # Admin Genel Bakış: Servisleri ID ve İsimle grupla (Aynı isimli kütüphaneleri ayırır)
         chart_stats = feedbacks.values('service__id', 'service__name').annotate(count=Count('id'))
         # Eğer aynı isimli servis varsa yanına küçük ID ekleyerek ayırt edilmesini sağlıyoruz
-        labels = [f"{item['service__name']} (#{item['service__id']})" for item in chart_stats]
+        labels = [item['service__name'] for item in chart_stats]
         chart_title = "Service Feedback Distribution"
 
     data = [item['count'] for item in chart_stats]
