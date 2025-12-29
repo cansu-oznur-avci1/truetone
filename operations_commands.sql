@@ -3,17 +3,17 @@
 SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
 FROM feedback_feedback f
 JOIN services_service s ON f.service_id = s.id
-WHERE f.user_id = 6;
-
-SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
-FROM feedback_feedback f
-JOIN services_service s ON f.service_id = s.id
 WHERE f.user_id = 1;
 
 SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
 FROM feedback_feedback f
 JOIN services_service s ON f.service_id = s.id
-WHERE f.user_id = 7;
+WHERE f.user_id = 3;
+
+SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
+FROM feedback_feedback f
+JOIN services_service s ON f.service_id = s.id
+WHERE f.user_id = 6;
 
 --All Users can filter his/her feedback entries by severity level
 SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category 
@@ -63,7 +63,7 @@ SELECT s.name AS service_name, f.severity, f.date, f.normalized_text, f.category
 FROM feedback_feedback f
 JOIN services_service s ON f.service_id = s.id
 
--- Admins can filter feedback entries by date range for a specific service
+-- Admins can filter feedback entries by date range and a specific service
 --Service Owners can filter feedback entries by date range for their services
 SELECT f.severity, COUNT(*) AS feedback_count
 FROM feedback_feedback f
