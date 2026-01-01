@@ -34,10 +34,33 @@ def submit_feedback(request, service_id):
 def user_feedback_list(request):
     query_set = Feedback.objects.filter(user=request.user).order_by('-date')
     search_query = request.GET.get('q', '')
+    status_filter = request.GET.get('status', '')
+    severity_filter = request.GET.get('severity', '')
     if search_query:
-        query_set = query_set.filter(raw_text__icontains=search_query)
+        query_set = query_set.filter(
+            Q(raw_text__icontains=search_query) | 
+            Q(normalized_text__icontains=search_query)
+        )
+    
+    if status_filter:
+        if status_filter == 'processed':
+            query_set = query_set.exclude(normalized_text__isnull=True).exclude(normalized_text__exact='')
+        elif status_filter == 'pending':
+            query_set = query_set.filter(Q(normalized_text__isnull=True) | Q(normalized_text__exact=''))
+
+    if severity_filter:
+        query_set = query_set.filter(severity=int(severity_filter))
+
     total_sent = query_set.count()
-    return render(request, 'feedback/user_feedback_list.html', {'feedbacks': query_set, 'total_sent': total_sent})
+    processed_count = query_set.exclude(normalized_text__isnull=True).exclude(normalized_text__exact='').count()
+
+    # context içine 'request' ekleyerek veya parametreleri tek tek göndererek 
+    # HTML'de seçili kalmalarını sağlıyoruz.
+    return render(request, 'feedback/user_feedback_list.html', {
+        'feedbacks': query_set, 
+        'total_sent': total_sent,
+        'processed_count': processed_count
+    })
 
 @login_required
 def service_owner_dashboard(request):
