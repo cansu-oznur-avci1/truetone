@@ -12,10 +12,10 @@
 
 ## 🖼️ Project Preview
 
-| User Interface | Analytics Dashboard |
+| User Interface (Feedback & Lists) | Analytics & Management Dashboards |
 | :---: | :---: |
-| <img src="screenshots/give_feedback.png" width="200"> | <img src="screenshots/feedback_list.png" width="200"> | <img src="screenshots/service_owner_dashboard.png" width="200"> | <img src="screenshots/admin_dashboard.png" width="200"> |
-| *Structured feedback forms for seamless data entry.* | *Visualized feedback metrics and user statistics.* |
+| <img src="screenshots/give_feedback.png" width="220" height="150"> <img src="screenshots/feedback_list.png" width="220" height="150"> | <img src="screenshots/service_owner_dashboard.png" width="220" height="150"> <img src="screenshots/admin_dashboard.png" width="220" height="150"> |
+| *Structured feedback forms and organized data views.* | *Service owner and admin-level analytics dashboards.* |
 
 ---
 
