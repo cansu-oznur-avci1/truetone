@@ -14,7 +14,7 @@
 
 | User Interface | Analytics Dashboard |
 | :---: | :---: |
-| <img src="screenshots/give_feedback.png" width="200"> <img src="screenshots/feedback_list.png" width="200"> | <img src="screenshots/service_owner_dashboard.png" width="200"> <img src="screenshots/admin_dashboard.png" width="200"> |
+| <img src="screenshots/give_feedback.png" width="200"> | <img src="screenshots/feedback_list.png" width="200"> | <img src="screenshots/service_owner_dashboard.png" width="200"> | <img src="screenshots/admin_dashboard.png" width="200"> |
 | *Structured feedback forms for seamless data entry.* | *Visualized feedback metrics and user statistics.* |
 
 ---
@@ -45,8 +45,8 @@ To get a local copy up and running, follow these steps:
 ### Installation
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/cansu-oznur-avci1/truetone.git](https://github.com/cansu-oznur-avci1/truetone.git)
-    ```
+    git clone https://github.com/cansu-oznur-avci1/truetone.git
+    
 2.  **Setup Virtual Environment:**
     ```bash
     python -m venv venv
@@ -73,6 +73,3 @@ To get a local copy up and running, follow these steps:
 
 * **Cansu Öznur Avcı** - Backend Architecture, Database Management, & System Logic.
 * **Aleyna** - Frontend UI/UX Design & Dashboard Visualization.
-
----
-<p align="center">Developed with ❤️ for better user experiences.</p>
