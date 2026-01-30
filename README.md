@@ -1,12 +1,13 @@
-# 🎵 TrueTone: Universal Feedback & AI Analytics System
+# 🎵 TrueTone: AI-Powered Structured Feedback & Analytics System
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python">
   <img src="https://img.shields.io/badge/Framework-Django-092e20.svg" alt="Django">
-  <img src="https://img.shields.io/badge/Frontend-Bootstrap_5-563d7c.svg" alt="Bootstrap">
+  <img src="https://img.shields.io/badge/AI-Normalization-FF6F61.svg" alt="AI Normalization">
+  <img src="https://img.shields.io/badge/Database-SQL-CC0000.svg" alt="SQL">
 </p>
 
-**TrueTone** is a comprehensive web application designed to bridge the gap between user experiences and data-driven decision-making. It provides a structured platform for users to submit feedback while offering administrators a powerful dashboard to track and analyze trends in real-time.
+**TrueTone** is an advanced feedback management system that bridges the gap between raw user input and professional business intelligence. Developed as a cross-disciplinary project for **Web Development** and **Database Management Systems** courses, it features an AI layer that transforms informal feedback into professional, actionable data.
 
 ---
 
@@ -14,70 +15,35 @@
 
 | User Interface (Feedback & Lists) | Analytics & Management Dashboards |
 | :---: | :---: |
-| <img src="screenshots/give_feedback.png" width="230" height="200"> <img src="screenshots/feedback_list.png" width="230" height="200"> | <img src="screenshots/service_owner_dashboard.png" width="230" height="200"> <img src="screenshots/admin_dashboard.png" width="230" height="200"> |
-| *Structured feedback forms and organized data views.* | *Service owner and admin-level analytics dashboards.* |
+| <img src="screenshots/give_feedback.png" width="220" height="150"> <img src="screenshots/feedback_list.png" width="220" height="150"> | <img src="screenshots/service_owner_dashboard.png" width="220" height="150"> <img src="screenshots/admin_dashboard.png" width="220" height="150"> |
+| *AI-assisted feedback entry and listing.* | *Visualized feedback metrics and admin controls.* |
 
 ---
 
 ## 🌟 Key Features
 
-* **Structured Data Collection:** Dynamic forms that ensure feedback is categorized and actionable from the moment it's submitted.
-* **Dynamic Analytics Dashboard:** A visual management suite (designed by **Aleyna**) to monitor feedback flow and user engagement metrics.
-* **Secure Authentication:** Robust user management system including registration, login, and role-based access control.
-* **MVT Architecture:** Built with a modular approach, separating core logic into specialized apps for user management and dashboard services.
-* **Fully Responsive:** A mobile-first design approach using Bootstrap 5 to ensure accessibility across all devices.
-
-## 🗄️ Database Architecture & Management
-This project was developed as a core integration for **Database Management Systems** and **Web Development** courses.
-
-* **Relational Schema:** Designed a robust relational database schema to handle complex feedback loops and user hierarchies.
-* **ORM Integration:** Leveraged **Django ORM** for efficient data querying, migrations, and database abstraction.
-* **Data Integrity:** Implemented ACID-compliant transactions and relational constraints to ensure data consistency across the user-feedback-analytics pipeline.
-* **Query Optimization:** Optimized data retrieval for the Analytics Dashboard to ensure real-time performance.
+* **🤖 AI Feedback Normalization:** A built-in AI engine analyzes raw user input in real-time. It automatically reformulates informal or emotional feedback into a professional, polite, and standardized tone before it reaches the service owner.
+* **📊 Dynamic Analytics Dashboard:** A comprehensive dashboard that visualizes feedback trends, user satisfaction metrics, and system performance.
+* **🗄️ Robust Database Architecture:** Designed with a complex relational schema to store both raw and AI-normalized data, ensuring data integrity and consistency across the MVT architecture.
+* **🔐 Secure Management:** Features a role-based access control (RBAC) system for users, service owners, and administrators.
 
 ## 🛠️ Technical Stack
 
 * **Backend:** Python 3.x, Django Web Framework
+* **AI Layer:** Generative AI for Text Normalization & Tone Adjustment
+* **Database:** Relational Schema (SQL-based), Django ORM for optimized querying
 * **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
-* **Database:** SQLite (Development) / PostgreSQL (Production ready)
-* **Version Control:** Git & GitHub
 
-## 🚀 Getting Started
+## 🚀 Technical Highlights
 
-To get a local copy up and running, follow these steps:
-
-### Prerequisites
-* Python 3.x installed
-* Virtual Environment (recommended)
-
-### Installation
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/cansu-oznur-avci1/truetone.git
-    
-2.  **Setup Virtual Environment:**
-    ```bash
-    python -m venv venv
-    # On Windows:
-    venv\Scripts\activate
-    # On macOS/Linux:
-    source venv/bin/activate
-    ```
-3.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  **Run Migrations:**
-    ```bash
-    python manage.py migrate
-    ```
-5.  **Start the Server:**
-    ```bash
-    python manage.py runserver
-    ```
-    *Access the app at `http://127.0.0.1:8000/`*
+1. **Normalization Pipeline:** When a user submits feedback, the AI processes the string to normalize the tone while preserving the core intent.
+2. **Data Modeling:** The database is optimized to handle relational dependencies between users, service types, and multi-layered feedback entries.
+3. **Responsive UI:** Fully compatible with mobile and desktop devices.
 
 ## 👥 Contributors
 
-* **Cansu Öznur Avcı** - Backend Architecture, Database Management, & System Logic.
+* **Cansu Öznur Avcı** - Backend Architecture, AI Integration, & Database Management.
 * **Aleyna** - Frontend UI/UX Design & Dashboard Visualization.
+
+---
+<p align="center">Empowering communication through Intelligent Design.</p>
