@@ -1,4 +1,4 @@
-# 🎵 TrueTone: Structured Feedback & Analytics System
+# 🎵 TrueTone: Universal Feedback & AI Analytics System
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python">
@@ -26,6 +26,14 @@
 * **Secure Authentication:** Robust user management system including registration, login, and role-based access control.
 * **MVT Architecture:** Built with a modular approach, separating core logic into specialized apps for user management and dashboard services.
 * **Fully Responsive:** A mobile-first design approach using Bootstrap 5 to ensure accessibility across all devices.
+
+## 🗄️ Database Architecture & Management
+This project was developed as a core integration for **Database Management Systems** and **Web Development** courses.
+
+* **Relational Schema:** Designed a robust relational database schema to handle complex feedback loops and user hierarchies.
+* **ORM Integration:** Leveraged **Django ORM** for efficient data querying, migrations, and database abstraction.
+* **Data Integrity:** Implemented ACID-compliant transactions and relational constraints to ensure data consistency across the user-feedback-analytics pipeline.
+* **Query Optimization:** Optimized data retrieval for the Analytics Dashboard to ensure real-time performance.
 
 ## 🛠️ Technical Stack
 
